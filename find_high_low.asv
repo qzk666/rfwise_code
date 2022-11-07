@@ -33,9 +33,10 @@ round_index = [5:5];
  %filename = ['F:/experiment_data/water_20cm/2022_10_22/250ml/' num2str(i_round) '/source']
  filename = ['F:/experiment_data/water/10_28/120ml/' num2str(i_round)];
  %filename = 'F:/experiment_data/water_30cm/4/source';
- [tee,count] = find_epc(filename);
+ tee = find_epc(filename);
  data = tee{1,1};
  data_complex = tee{1,2};
+ [data,data_complex] = [tee{1,1},tee{1,2}];
  plot(data);
  if length(data) == 0
      continue;
