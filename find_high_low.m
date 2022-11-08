@@ -5,9 +5,10 @@ close all
 %加载匹配模版
 %load template.mat; %匹配RN16
 %load template2.mat; %匹配恒定波
-fi_2 = fopen('F:/experiment_data/water/10_28/120ml/5','rb'); 
+fi_2 = fopen('F:/experiment_data/rfwise_data/sugar_water4/trans','rb'); 
 x_inter_2 = fread(fi_2, 'float32');
 x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
+x_2 = x_2(2.99242e7:2.99248e7);
 plot(abs(x_2));
 %%
 %  fi_2 = fopen('/Volumes/aigo/rfwise_data/sugar_water7/source','rb'); 
