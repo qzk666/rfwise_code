@@ -10,7 +10,12 @@ x_inter_2 = fread(fi_2, 'float32');
 x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
 %x_2 = x_2(2.006e7:2.0065e7);
 figure(1)
-plot(abs(x_2(1.5e7:2e7)));
+%plot(abs(x_2(1.5e7:2e7)));
+x_2 = x_2(1.5e7:2e7);
+template = x_2(2861280-65:2861280-65+149);
+figure(2);
+plot(abs(template));
+save template.mat template;
 
 %%
 %加载匹配模版
@@ -70,19 +75,19 @@ scatter(z,yy,'red');hold on;
 color_array = {'#000000' '#589453' '#512321' 'red' 'green' 'blue' '#DACDA2' '#113521' '#52312D' '#DCA561'};
 num_valid = 0;
 round_index = [5:5];
+load template.mat;
  for i_round = round_index
  %filename = ['/Volumes/My_Passport/experiment_data/water_50cm/' num2str(i_round) '/source' ];
  %filename = ['F:/experiment_data/water_20cm/2022_10_22/250ml/' num2str(i_round) '/source']
  filename = ['F:/experiment_data/water/10_28/120ml/' num2str(i_round)];
  %filename = 'F:/experiment_data/water_30cm/4/source';
- [tee,count] = find_epc(filename);
+ [tee,count] = find_epc(filename,template);
  data = tee{1,1};
  data_complex = tee{1,2};
- plot(data);
+ plot(data(301:450));
  if length(data) == 0
      continue;
  end
-
  
  %TODO:利用均值分辨高低电平
 

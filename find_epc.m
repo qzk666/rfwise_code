@@ -1,4 +1,4 @@
-function [epc_arr,count,start] = find_epc(filename) 
+function [epc_arr,count] = find_epc(filename,template) 
  fi_2 = fopen(filename,'rb'); 
  
  x_inter_2 = fread(fi_2, 'float32');
@@ -30,7 +30,8 @@ function [epc_arr,count,start] = find_epc(filename)
          
          temp_left = epc_left + 400;
          temp_right = temp_left + 1500;
-         [l,r] = find_match(data(temp_left:temp_right),template);
+         rrrrr = find_match(data(temp_left:temp_right),abs(template));
+         l = rrrrr(1);
          k = l + temp_left -1;
 
          epc_right = epc_right - 3e4;
@@ -41,7 +42,7 @@ function [epc_arr,count,start] = find_epc(filename)
                  break;
              end
          end
-         
+
          epc_arr{count,1} = data(epc_left:epc_right);
          epc_arr{count,2} = data_complex(epc_left:epc_right);
      end
