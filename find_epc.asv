@@ -1,4 +1,4 @@
-function [res,res_complex] = find_epc(filename)
+function [epc_arr,count,start] = find_epc(filename) 
  fi_2 = fopen(filename,'rb'); 
  
  x_inter_2 = fread(fi_2, 'float32');
@@ -21,25 +21,26 @@ function [res,res_complex] = find_epc(filename)
  epc_left_arr = [];
  epc_right_arr = [];
  epc_arr = cell(1000,2);
- count = 0;
+ count = 0; %总共找了多少组
  for i = 2:length(I)
      if I(i) - I(i-1) > limit
          count = count +1;
          epc_right = I(i);
          epc_left = I(i-1);
-         epc_arr{}
-         epc_right_arr = [epc_right_arr epc_right];
-         epc_left_arr = [epc_left_arr epc_left];
+         
+         temp_left = epc_left + 400;
+         temp_right = temp_left + 1500;
+         [l,r] = find_match(data(temp_left:temp_right),template);
+         k = l + temp_left -1;
+
+         epc_right = epc_right - 3e4;
+         epc_left = epc_left + 1e4;
+         for j = epc_left:epc_left+200
+             if
+         end
+         epc_arr{count,1} = data(epc_left:epc_right);
+         epc_arr{count,2} = data_complex(epc_left:epc_right);
      end
  end
-
- epc_right = epc_right - 3e4;
-
- epc_left = epc_left + 1e4;
-
- res = data(epc_left:epc_right);
-
- res_complex = data_complex(epc_left:epc_right);
-
 end
 

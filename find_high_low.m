@@ -5,11 +5,52 @@ close all
 %加载匹配模版
 %load template.mat; %匹配RN16
 %load template2.mat; %匹配恒定波
-fi_2 = fopen('F:/experiment_data/rfwise_data/sugar_water4/trans','rb'); 
+fi_2 = fopen('F:/experiment_data/water/10_28/120ml/2','rb'); 
 x_inter_2 = fread(fi_2, 'float32');
 x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
-x_2 = x_2(2.99242e7:2.99248e7);
-plot(abs(x_2));
+%x_2 = x_2(2.006e7:2.0065e7);
+figure(1)
+plot(abs(x_2(1.5e7:2e7)));
+
+%%
+%加载匹配模版
+%load template.mat; %匹配RN16
+%load template2.mat; %匹配恒定波
+fi_2 = fopen('F:/experiment_data/water/10_28/120ml/2','rb'); 
+x_inter_2 = fread(fi_2, 'float32');
+x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
+x_2 = x_2(2.0964e7:2.097e7);
+rrrr = fft(x_2);
+rrrr = rrrr-mean(rrrr);
+rrrr = rrrr(2:end);
+figure(1)
+plot(abs(rrrr));
+%%
+figure(4)
+fi_2 = fopen('F:/experiment_data/water/10_28/120ml/2','rb'); 
+x_inter_2 = fread(fi_2, 'float32');
+x = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
+% beginn = 18568700;
+% endd = 18577500;
+beginn = 18282500;
+endd = 18288200;
+x = x(beginn:endd);
+x = x - mean(x);
+%x = filter(HPF,x);
+plot(fftshift(abs(fft(x)))/length(x))
+x_2 = real(x);
+y_2 = imag(x);
+figure(2);
+scatter(x_2,y_2,'red');
+hold on;
+% xlim([-1,0]);
+% ylim([-0.5,0.5]);
+axis equal;
+figure(3);
+z = y_2./x_2;
+z = atan(z);
+yy = ones(length(z),1);
+scatter(z,yy,'red');hold on;
 %%
 %  fi_2 = fopen('/Volumes/aigo/rfwise_data/sugar_water7/source','rb'); 
 %  x_inter_2 = fread(fi_2, 'float32');
