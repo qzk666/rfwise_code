@@ -24,6 +24,11 @@ end
 temp2 = temp2/n_low;
 
 tt = temp - temp2;
-res = 
-res = atan(tt);
+% plot(abs(temp)),hold on;
+% plot(abs(temp2))
+pp = zeros(150,1);
+for i = 1:150
+    pp(i) = imag(tt(i))/real(tt(i));
+end
+res = atan(pp);
 end
