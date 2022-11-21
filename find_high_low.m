@@ -84,11 +84,11 @@ load template.mat;
  [tee,count] = find_epc(filename,template);
  data = tee{1,1};
  data_complex = tee{1,2};
- plot(data(301:450));
+ %plot(data(301:450));
  if length(data) == 0
      continue;
  end
- 
+
  %TODO:利用均值分辨高低电平
 
  round_num = floor(length(data)/150);
@@ -103,7 +103,7 @@ load template.mat;
 
 
  
-rr = extract_fea(data,data_complex,data_mean,round_num);
+rr = extract_phase(data,data_complex,data_mean,round_num);
 %rr = rr/(rr(70));
 
 %plot(rr,'color',color_array{1,i_round});hold on;
