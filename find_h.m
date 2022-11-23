@@ -1,6 +1,6 @@
 function [h_i,n_high] = find_h(I)
  %找到高电平
- high = length(I)-40:length(I);
+ high = length(I)-20:length(I);
  high_index_temp = I(high);
  high_index_final = [];
  h_i = {};%high_index

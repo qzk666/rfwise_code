@@ -5,10 +5,11 @@ function [epc_arr,count] = find_epc(filename,template)
  x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
 
  %plot(abs(x_2));
- m = 4/8;
- data = abs(x_2(length(x_2)*m:length(x_2)*m+1e6));
+ m = 1/8;
+ p = 7/8;
+ data = abs(x_2(length(x_2)*m:length(x_2)*p));
 
- data_complex = x_2(length(x_2)*m:length(x_2)*m+1e6);
+ data_complex = x_2(length(x_2)*m:length(x_2)*p);
 
  I = find(data<0.015);
 

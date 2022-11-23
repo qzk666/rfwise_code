@@ -23,12 +23,21 @@ for i = 1:n_low
 end
 temp2 = temp2/n_low;
 
-tt = temp - temp2;
-% plot(abs(temp)),hold on;
-% plot(abs(temp2))
-pp = zeros(150,1);
+tt = temp;
+res = [];
 for i = 1:150
-    pp(i) = imag(tt(i))/real(tt(i));
+    z = imag(tt(i))/real(tt(i));
+    if real(tt(i)) >=0 && imag(tt(i)) >=0
+        z = atan(z);
+    elseif real(tt(i)) >=0 && imag(tt(i)) <=0
+        z = atan(z)+2*pi;
+    elseif real(tt(i)) <=0 && imag(tt(i)) >=0
+        z = atan(z)+pi;
+    elseif real(tt(i)) <=0 && imag(tt(i)) <=0
+        z = atan(z)+pi;
+    end
+    res = [res;z];
 end
-res = atan(pp);
+
+
 end
