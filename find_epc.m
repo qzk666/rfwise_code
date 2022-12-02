@@ -28,23 +28,12 @@ function [epc_arr,count] = find_epc(filename,template)
  last_right = 0;
  offset = 150000;
  for i = 2:length(I)
-     if I(i) - I(i-1) > limit || flag == 1
-         if count >200
-             break;
-         end
+     if I(i) - I(i-1) > limit
+        
          count = count +1;
-         if flag == 0
+        
          epc_right = I(i);
          epc_left = I(i-1);
-         last_left = epc_left;
-         last_right = epc_right;
-         flag = 1;
-         else
-         epc_left = last_left + offset;
-         epc_right = last_right + offset;
-         last_left = epc_left;
-         last_right = epc_right;
-         end
          temp_left = epc_left + 400;
          temp_right = temp_left + 1500;
          rrrrr = find_match(data(temp_left:temp_right),abs(template));

@@ -5,7 +5,7 @@ close all
 %加载匹配模版
 %load template.mat; %匹配RN16
 %load template2.mat; %匹配恒定波
-fi_2 = fopen('F:/experiment_data/water/11_26/no_vib/13','rb'); 
+fi_2 = fopen('F:/experiment_data/water/11_26/no_vib/12','rb'); 
 x_inter_2 = fread(fi_2, 'float32');
 x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
 x_2 = x_2(2.6e7:3.4e7);
@@ -103,7 +103,7 @@ pha = [];
  for i_round = round_index
  %filename = ['/Volumes/My_Passport/experiment_data/water_50cm/' num2str(i_round) '/source' ];
  %filename = ['F:/experiment_data/water_20cm/2022_10_22/250ml/' num2str(i_round) '/source']
- filename = 'F:/experiment_data/water/11_26/no_vib/13';
+ filename = 'F:/experiment_data/water/11_26/no_vib/12';
  filename = ['F:/experiment_data/water/11_26/no_vib/' num2str(i_round)];
  %filename = 'F:/experiment_data/water_30cm/4/source';
  [tee,count] = find_epc(filename,template);
@@ -139,18 +139,18 @@ pha = [pha;rr];
 
 %plot(rr,'color',color_array{1,i_round});hold on;
 num_valid = num_valid +1;
-plot(pha(1:end,40));hold on;
+plot(pha(1:end,5));hold on;
  end
 %%
-a = pha(28:201,40);
+a = pha(1:265,1);
 a = a - mean(a);
 %plot(abs(fft(a)));
 
 N = length(a);
 x = fft(a);
 m = abs(x);
-f = (0:N-1)*150/N;
-plot(f(1:100),m(1:100));
+f = (0:N-1)*165/N;
+plot(f(1:floor(end/2)),m(1:floor(end/2)));
 %%
  plot(tee{200,1});
 %%
