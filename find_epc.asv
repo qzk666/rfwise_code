@@ -1,14 +1,15 @@
-function [epc_arr,count,start] = find_epc(filename) 
+function [epc_arr,count] = find_epc(filename,template) 
  fi_2 = fopen(filename,'rb'); 
  
  x_inter_2 = fread(fi_2, 'float32');
  x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
 
  %plot(abs(x_2));
- m = 4/8;
- data = abs(x_2(length(x_2)*m:length(x_2)*m+1e6));
+ m = 1/8;
+ p = 7/8;
+ data = abs(x_2(length(x_2)*m:length(x_2)*p));
 
- data_complex = x_2(length(x_2)*m:length(x_2)*m+1e6);
+ data_complex = x_2(length(x_2)*m:length(x_2)*p);
 
  I = find(data<0.015);
 
@@ -22,22 +23,38 @@ function [epc_arr,count,start] = find_epc(filename)
  epc_right_arr = [];
  epc_arr = cell(1000,2);
  count = 0; %总共找了多少组
+ flag == 0;
+ last_left = 0;
+ last_right = 0;
+ offset = 150000;
  for i = 2:length(I)
-     if I(i) - I(i-1) > limit
+     if I(i) - I(i-1) > limit || flag == 1
          count = count +1;
+         if flag == 0
          epc_right = I(i);
          epc_left = I(i-1);
-         
+         last_left = epc_left;
+         last_right = epc_right;
+         flag = 1;
+         else
+         epc_left = last_left + offset;
+         epc_right = last_right + offset;
+         end
          temp_left = epc_left + 400;
          temp_right = temp_left + 1500;
-         [l,r] = find_match(data(temp_left:temp_right),template);
+         rrrrr = find_match(data(temp_left:temp_right),abs(template));
+         l = rrrrr(1);
          k = l + temp_left -1;
 
          epc_right = epc_right - 3e4;
          epc_left = epc_left + 1e4;
          for j = epc_left:epc_left+200
-             if
+             if mod(j-k,150) ==0
+                 epc_left = j;
+                 break;
+             end
          end
+
          epc_arr{count,1} = data(epc_left:epc_right);
          epc_arr{count,2} = data_complex(epc_left:epc_right);
      end
