@@ -142,7 +142,8 @@ num_valid = num_valid +1;
 plot(pha(1:end,5));hold on;
  end
 %%
-a = pha(1:265,1);
+index = [1:265,267:350];
+a = pha(index,1);
 a = a - mean(a);
 %plot(abs(fft(a)));
 

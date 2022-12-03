@@ -27,9 +27,10 @@ function [epc_arr,count] = find_epc(filename,template)
  last_left = 0;
  last_right = 0;
  offset = 150000;
+ indee = [];
  for i = 2:length(I)
      if I(i) - I(i-1) > limit
-        
+         indee = [indee,I(i)/150000];
          count = count +1;
         
          epc_right = I(i);
