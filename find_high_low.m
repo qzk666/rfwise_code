@@ -103,7 +103,7 @@ pha = [];
  for i_round = round_index
  %filename = ['/Volumes/My_Passport/experiment_data/water_50cm/' num2str(i_round) '/source' ];
  %filename = ['F:/experiment_data/water_20cm/2022_10_22/250ml/' num2str(i_round) '/source']
- filename = 'F:/experiment_data/water/11_26/no_vib/12';
+ filename = 'F:/experiment_data/water/11_26/no_vib/10';
  filename = ['F:/experiment_data/water/11_26/no_vib/' num2str(i_round)];
  %filename = 'F:/experiment_data/water_30cm/4/source';
  [tee,count] = find_epc(filename,template);
@@ -139,17 +139,17 @@ pha = [pha;rr];
 
 %plot(rr,'color',color_array{1,i_round});hold on;
 num_valid = num_valid +1;
-plot(pha(1:end,5));hold on;
+plot(pha(1:end,7));hold on;
  end
 %%
-index = [1:265,267:350];
+index = [1:265];
 a = pha(index,1);
 a = a - mean(a);
 %plot(abs(fft(a)));
 
 N = length(a);
 x = fft(a);
-m = abs(x);
+m = abs(x)/N*2;
 f = (0:N-1)*165/N;
 plot(f(1:floor(end/2)),m(1:floor(end/2)));
 %%
