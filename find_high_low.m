@@ -144,6 +144,7 @@ num_valid = num_valid +1;
  end
 
 %%
+%减去对照组
 cc = origin_complex_pha(1:200,1:end);
 avv = mean(origin_complex_pha(310:340,1:end));
 cc = cc - avv;
@@ -161,6 +162,7 @@ m = abs(x)/N*2;
 f = (0:N-1)*167/N;
 plot(f(1:floor(end/2)),m(1:floor(end/2)));
 %%
+%没有减去对照组
 a = pha(1:end,30);
 a = a - mean(a);
 %a = movmean(a,3);
