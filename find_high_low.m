@@ -142,9 +142,7 @@ origin_complex_pha = origin_complex_pha';
 num_valid = num_valid +1;
 %plot(pha(1:end,7));hold on;
  end
-%%
-a= [1,2;2,3;2,3];
-avv = mean(a);
+
 %%
 cc = origin_complex_pha(1:200,1:end);
 avv = mean(origin_complex_pha(310:340,1:end));
@@ -173,39 +171,9 @@ x = fft(a);
 m = abs(x)/N*2;
 f = (0:N-1)*167/N;
 plot(f(1:floor(end/2)),m(1:floor(end/2)));
-%%
- plot(tee{200,1});
-%%
-save data_low_sugar_water_x.mat data_low_sugar_water_x;
-save data_high_sugar_water_x.mat data_high_sugar_water_x;
-%储存的变量已经减去均值了，要用的时候直接FFT即可
-
-
- 
-
-
- fi_2 = fopen('F:/experiment_data/water_20cm/1/source','rb'); 
- x_inter_2 = fread(fi_2, 'float32');
- x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
-figure(2)
- plot(abs(x_2));
 
 
 
 
-
-
- %%
- feature_low_sugar_water_6 = feature_low_final;
-
- feature_high_sugar_water_6 = feature_high_final;
-
- save feature_low_sugar_water_6.mat feature_low_sugar_water_6;
-
- save feature_high_sugar_water_6.mat feature_high_sugar_water_6;
-
-a = [1 2 3]
-b = [1 2 3]
-c = a - b
 
 
