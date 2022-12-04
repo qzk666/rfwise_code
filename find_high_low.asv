@@ -28,7 +28,7 @@ save template.mat template;
 %加载匹配模版
 %load template.mat; %匹配RN16
 %load template2.mat; %匹配恒定波
-fi_2 = fopen('F:/experiment_data/water/12_3/55hz_not_continue/1','rb'); 
+fi_2 = fopen('F:/experiment_data/water/12_3/55hz_not_continue/2','rb'); 
 x_inter_2 = fread(fi_2, 'float32');
 x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
 plot(abs(x_2));
@@ -143,11 +143,11 @@ num_valid = num_valid +1;
 %plot(pha(1:end,7));hold on;
  end
 %%
-a= [1,2;2,3;2,3];
-avv = mean(a);
+a= [1,2;2,3];
+
 %%
 cc = origin_complex_pha(1:200,1:end);
-avv = mean(origin_complex_pha(310:340,1:end));
+avv = mean(origin_complex_pha(330:340,1:end));
 cc = cc - avv;
 cc = cc(1:end,50);
 a = compute_phase(cc);
