@@ -1,15 +1,4 @@
-function [epc_arr,count] = find_epc(filename,template) 
- fi_2 = fopen(filename,'rb'); 
- 
- x_inter_2 = fread(fi_2, 'float32');
- x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
-
- %plot(abs(x_2));
- m = 1/8;
- p = 7/8;
- data = abs(x_2(length(x_2)*m:length(x_2)*p));
-
- data_complex = x_2(length(x_2)*m:length(x_2)*p);
+function [epc_arr,count] = find_epc(data,data_complex,template) 
 
  I = find(data<0.015);
 
@@ -21,7 +10,7 @@ function [epc_arr,count] = find_epc(filename,template)
  epc_right = 0;
  epc_left_arr = [];
  epc_right_arr = [];
- epc_arr = cell(1000,2);
+ epc_arr = cell(1000,3);
  count = 0; %总共找了多少组
  flag = 0;
  last_left = 0;
@@ -52,6 +41,7 @@ function [epc_arr,count] = find_epc(filename,template)
 
          epc_arr{count,1} = data(epc_left:epc_right);
          epc_arr{count,2} = data_complex(epc_left:epc_right);
+         epc_arr{count,3} = epc_left;
      end
  end
 end

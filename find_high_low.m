@@ -28,7 +28,7 @@ save template.mat template;
 %加载匹配模版
 %load template.mat; %匹配RN16
 %load template2.mat; %匹配恒定波
-fi_2 = fopen('F:/experiment_data/water/12_3/55hz_not_continue/1','rb'); 
+fi_2 = fopen('F:/experiment_data/water/12_3/55hz_not_continue/4','rb'); 
 x_inter_2 = fread(fi_2, 'float32');
 x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
 plot(abs(x_2));
@@ -80,38 +80,43 @@ plot(zz),hold on;
 % yy = ones(length(z),1);
 % scatter(z,yy,'red');hold on;
 %%
-%  fi_2 = fopen('/Volumes/aigo/rfwise_data/sugar_water7/source','rb'); 
-%  x_inter_2 = fread(fi_2, 'float32');
-%  x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
-% 
-%  l = length(x_2);
-%  test_data = abs(x_2(l/2:l/2+1e6));
-%  test_data_complex = x_2(l/2:l/2+1e6);%复数形式
-% 
-%  res = find_match(test_data,template);
-%  figure(2)
-%  plot(test_data,'r');hold on;
-%  plot(res(1):res(2),test_data(res(1):res(2)),'b');
-%  data = test_data(res(1)+55000:res(1)+55000+35000);
-%  %plot(data);hold on;
-%  data_complex = test_data_complex(res(1)+55000:res(1)+55000+35000);
+
 color_array = {'#000000' '#589453' '#512321' 'red' 'green' 'blue' '#DACDA2' '#113521' '#52312D' '#DCA561'};
 num_valid = 0;
-round_index = 1;
+round_index = 4;
 load template.mat;
 pha = [];
-origin_complex_pha = [];
+origin_complex_pha_vib = [];
+origin_complex_pha_not_vib = [];
  for i_round = round_index
+ for flag = 0:1%1:vib,0:not vib
  %filename = ['/Volumes/My_Passport/experiment_data/water_50cm/' num2str(i_round) '/source' ];
  %filename = ['F:/experiment_data/water_20cm/2022_10_22/250ml/' num2str(i_round) '/source']
- filename = 'F:/experiment_data/water/11_26/no_vib/10';
- filename = ['F:/experiment_data/water/12_3/55hz_continue/' num2str(i_round)];
+% filename = 'F:/experiment_data/water/11_26/no_vib/10';
+ filename = ['F:/experiment_data/water/12_3/55hz_not_continue/' num2str(i_round)];
  %filename = 'F:/experiment_data/water_30cm/4/source';
- [tee,count] = find_epc(filename,template);
+ fi_2 = fopen(filename,'rb'); 
+ x_inter_2 = fread(fi_2, 'float32');
+ x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
+ if flag ==0
+ x_2 = x_2(978623:6705220);
+ else
+     x_2 = x_2(11871200:66343900);
+ end
+ %plot(abs(x_2));
+ m = 1/50;
+ p = 49/50;
+ data = abs(x_2(length(x_2)*m:length(x_2)*p));
+ data_complex = x_2(length(x_2)*m:length(x_2)*p);
+ start_index = length(x_2)*m;
+
+
+ [tee,count] = find_epc(data,data_complex,template);
  [line,column] = size(tee);
  for co = 1:count
  data = tee{co,1};
  data_complex = tee{co,2};
+ ii = tee{co,3} + start_index;
  %plot(data(301:450));
  if length(data) == 0
      continue;
@@ -129,49 +134,71 @@ origin_complex_pha = [];
      continue;
  end
 
-[rr,tt] = extract_phase(data,data_complex,data_mean,round_num);
-origin_complex_pha = [origin_complex_pha,tt];
+[rr,tt,iii] = extract_phase(data,data_complex,data_mean,round_num,ii);
+%TODO:插值
+if flag == 1
+origin_complex_pha_vib = [origin_complex_pha_vib,tt];
+else
+    origin_complex_pha_not_vib = [origin_complex_pha_not_vib,tt];
+end
 rr =  rr.';
 pha = [pha;rr];
  end
- 
-origin_complex_pha = origin_complex_pha';
+if flag ==1
+origin_complex_pha_vib = origin_complex_pha_vib';
+else
+origin_complex_pha_not_vib = origin_complex_pha_not_vib';
+end
 %rr = rr/(rr(70));
-
+if flag == 0
+    avv = mean(origin_complex_pha_not_vib);
+end
+ end
 %plot(rr,'color',color_array{1,i_round});hold on;
 num_valid = num_valid +1;
 %plot(pha(1:end,7));hold on;
  end
-
+%%
+plot(compute_phase(origin_complex_pha_not_vib(1:end,30)));
 %%
 %减去对照组
-cc = origin_complex_pha(1:200,1:end);
-avv = mean(origin_complex_pha(310:340,1:end));
-cc = cc - avv;
+cc = origin_complex_pha_vib - avv;
 cc = cc(1:end,50);
 a = compute_phase(cc);
+a(find(a<2.5))=a(find(a<2.5))+2*pi;
 % index = [1:200];
 % a = pha(index,15);
 a = a - mean(a);
+
+%a = filter(BPF,a);
 %a = movmean(a,3);
 %plot(abs(fft(a)));
 
 N = length(a);
 x = fft(a);
 m = abs(x)/N*2;
-f = (0:N-1)*167/N;
+f = (0:N-1)*167*51/N;
+figure(2);
 plot(f(1:floor(end/2)),m(1:floor(end/2)));
 %%
 %没有减去对照组
-a = pha(1:end,30);
+cc = origin_complex_pha_vib;
+cc = cc(1:end,50);
+a = compute_phase(cc);
+a(find(a<2.5))=a(find(a<2.5))+2*pi;
+% index = [1:200];
+% a = pha(index,15);
 a = a - mean(a);
+
+%a = filter(BPF,a);
 %a = movmean(a,3);
 %plot(abs(fft(a)));
 
 N = length(a);
 x = fft(a);
 m = abs(x)/N*2;
-f = (0:N-1)*167/N;
+f = (0:N-1)*167*51/N;
+figure(2);
 plot(f(1:floor(end/2)),m(1:floor(end/2)));
 
 
