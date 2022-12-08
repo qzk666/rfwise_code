@@ -40,21 +40,23 @@ figure(1)
 plot(abs(rrrr));
 %%
 figure(4)
-fi_2 = fopen('F:/experiment_data/water/10_28/120ml/2','rb'); 
+fi_2 = fopen('F:/experiment_data/water/12_3/55hz_not_continue/4','rb'); 
 x_inter_2 = fread(fi_2, 'float32');
 x = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
-plot(abs(x))
+plot(abs(x));hold on;
+inn = 91;
+plot(index_final_vib(inn):index_final_vib(inn)+149,abs(x(index_final_vib(inn):index_final_vib(inn)+149)));
 % beginn = 18568700;
 % endd = 18577500;
-beginn = 1.187e7;
-endd = 1.1874e7;
+beginn = 3464000;
+endd = 3476000;
 x = x(beginn:endd);
 %x = x - mean(x);
 %x = filter(HPF,x);
 %plot(fftshift(abs(fft(x)))/length(x))
 x_2 = real(x);
 y_2 = imag(x);
-figure(2);
+figure(3);
 scatter(x_2,y_2,'red');
 hold on;
 % xlim([-1,0]);
@@ -89,6 +91,8 @@ pha = [];
 origin_complex_pha_vib = [];
 origin_complex_pha_not_vib = [];
  for i_round = round_index
+     index_final_not_vib = [];
+     index_final_vib = [];
  for flag = 0:1%1:vib,0:not vib
  %filename = ['/Volumes/My_Passport/experiment_data/water_50cm/' num2str(i_round) '/source' ];
  %filename = ['F:/experiment_data/water_20cm/2022_10_22/250ml/' num2str(i_round) '/source']
@@ -99,9 +103,13 @@ origin_complex_pha_not_vib = [];
  x_inter_2 = fread(fi_2, 'float32');
  x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
  if flag ==0
- x_2 = x_2(978623:6705220);
+     beginn_0 =978623;
+     endd_0 = 6705220;
+     x_2 = x_2(beginn_0:endd_0);
  else
-     x_2 = x_2(11871200:66343900);
+     beginn_1 =11871200;
+     endd_1 = 66343900;
+     x_2 = x_2(beginn_1:endd_1);
  end
  %plot(abs(x_2));
  m = 1/50;
@@ -135,6 +143,11 @@ origin_complex_pha_not_vib = [];
  end
 
 [rr,tt,iii] = extract_phase(data,data_complex,data_mean,round_num,ii);
+if flag == 0
+index_final_not_vib = [index_final_not_vib,iii+beginn_0];
+else
+    index_final_vib = [index_final_vib,iii+beginn_1];
+end
 %TODO:插值
 if flag == 1
 origin_complex_pha_vib = [origin_complex_pha_vib,tt];
@@ -156,6 +169,7 @@ end
  end
 %plot(rr,'color',color_array{1,i_round});hold on;
 num_valid = num_valid +1;
+
 %plot(pha(1:end,7));hold on;
  end
 %%
@@ -165,6 +179,11 @@ plot(compute_phase(origin_complex_pha_not_vib(1:end,30)));
 cc = origin_complex_pha_vib - avv;
 cc = cc(1:end,50);
 a = compute_phase(cc);
+lenlen = length(index_final_vib);
+k = 2;
+nn = length(index_final_vib)*k;
+index_target = linspace(index_final_vib(1),index_final_vib(lenlen),nn);
+a = interp1(index_final_vib,a,index_target);
 a(find(a<2.5))=a(find(a<2.5))+2*pi;
 % index = [1:200];
 % a = pha(index,15);
@@ -177,18 +196,33 @@ a = a - mean(a);
 N = length(a);
 x = fft(a);
 m = abs(x)/N*2;
-f = (0:N-1)*167*51/N;
+f = (0:N-1)*167*151*k/N;
 figure(2);
 plot(f(1:floor(end/2)),m(1:floor(end/2)));
 %%
+l = 150;
+kk = cc(1+151*(l-1):151*l);
+a = compute_phase(kk);
+x_2 = real(kk);
+y_2 = imag(kk);
+figure(3);
+scatter(x_2,y_2,'red');
+%%
+x_2 = real(cc);
+y_2 = imag(cc);
+figure(3);
+scatter(x_2,y_2,'red');
+%%
 %没有减去对照组
 cc = origin_complex_pha_vib;
-cc = cc(1:end,50);
+cc = cc(1:end,60);
 a = compute_phase(cc);
+a = interppp(a,index_final_vib,2);
 a(find(a<2.5))=a(find(a<2.5))+2*pi;
 % index = [1:200];
 % a = pha(index,15);
 a = a - mean(a);
+a = a(1:9000);
 
 %a = filter(BPF,a);
 %a = movmean(a,3);
