@@ -1,7 +1,7 @@
 function [l_i,n_low] = find_l(I)
 %当低电平的有两个连着的下标，作为1的低电平。同理作为高电平
  %找到低电平
- low = 1:150;
+ low = 1:20;
  low_index_temp = I(low);
  low_index_final = [];
  l_i = {};%
