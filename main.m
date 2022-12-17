@@ -93,15 +93,17 @@ origin_complex_pha_not_vib = [];
  for i_round = round_index
      index_final_not_vib = [];
      index_final_vib = [];
+      filename = ['F:/experiment_data/water/12_3/55hz_not_continue/' num2str(i_round)];
+ %filename = 'F:/experiment_data/water_30cm/4/source';
+        fi_2 = fopen(filename,'rb'); 
+        x_inter_2 = fread(fi_2, 'float32');
+        x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
+        x_const = x_2;
  for flag = 0:1%1:vib,0:not vib
  %filename = ['/Volumes/My_Passport/experiment_data/water_50cm/' num2str(i_round) '/source' ];
  %filename = ['F:/experiment_data/water_20cm/2022_10_22/250ml/' num2str(i_round) '/source']
 % filename = 'F:/experiment_data/water/11_26/no_vib/10';
- filename = ['F:/experiment_data/water/12_3/55hz_not_continue/' num2str(i_round)];
- %filename = 'F:/experiment_data/water_30cm/4/source';
- fi_2 = fopen(filename,'rb'); 
- x_inter_2 = fread(fi_2, 'float32');
- x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
+ x_2 = x_const;
  if flag ==0
      beginn_0 =978623;
      endd_0 = 6705220;
@@ -167,18 +169,30 @@ if flag == 0
     avv = mean(origin_complex_pha_not_vib);
 end
  end
+
+
+
 %plot(rr,'color',color_array{1,i_round});hold on;
 num_valid = num_valid +1;
-
+index_final_vib = int32(index_final_vib);
+index_final_not_vib = int32(index_final_not_vib);
+%plot_all(x_const,index_final_vib,index_final_not_vib);
 %plot(pha(1:end,7));hold on;
  end
 %%
 plot(compute_phase(origin_complex_pha_not_vib(1:end,30)));
 %%
+cc = origin_complex_pha_not_vib(1:end,60);
+plot_scatter(cc);
+%%
 %减去对照组
-cc = origin_complex_pha_vib - avv;
-cc = cc(1:end,50);
+cc = origin_complex_pha_vib;
+indexxx = 20;
+cc = cc(1:end,indexxx);
+cc = cc - avv(indexxx);
+
 a = compute_phase(cc);
+a(find(a<2.5))=a(find(a<2.5))+2*pi;
 lenlen = length(index_final_vib);
 k = 2;
 nn = length(index_final_vib)*k;
@@ -196,7 +210,7 @@ a = a - mean(a);
 N = length(a);
 x = fft(a);
 m = abs(x)/N*2;
-f = (0:N-1)*167*151*k/N;
+f = (0:N-1)*167*51*k/N;
 figure(2);
 plot(f(1:floor(end/2)),m(1:floor(end/2)));
 %%
@@ -214,7 +228,7 @@ figure(3);
 scatter(x_2,y_2,'red');
 %%
 %没有减去对照组
-cc = origin_complex_pha_vib;
+cc = origin_complex_pha_not_vib;
 cc = cc(1:end,60);
 a = compute_phase(cc);
 a = interppp(a,index_final_vib,2);
@@ -234,6 +248,7 @@ m = abs(x)/N*2;
 f = (0:N-1)*167*51/N;
 figure(2);
 plot(f(1:floor(end/2)),m(1:floor(end/2)));
+hold on;
 
 
 
