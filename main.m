@@ -28,7 +28,7 @@ save template.mat template;
 %加载匹配模版
 %load template.mat; %匹配RN16
 %load template2.mat; %匹配恒定波
-fi_2 = fopen('F:/experiment_data/water/12_3/55hz_not_continue/4','rb'); 
+fi_2 = fopen('F:/experiment_data/water/12_3/55hz_not_continue/3','rb'); 
 x_inter_2 = fread(fi_2, 'float32');
 x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
 plot(abs(x_2));
@@ -104,13 +104,23 @@ origin_complex_pha_not_vib = [];
  %filename = ['F:/experiment_data/water_20cm/2022_10_22/250ml/' num2str(i_round) '/source']
 % filename = 'F:/experiment_data/water/11_26/no_vib/10';
  x_2 = x_const;
- if flag ==0
+ if flag ==0 %no vib
+     if i_round == 4
      beginn_0 =978623;
      endd_0 = 6705220;
+     elseif i_round == 3
+     beginn_0 = 61270900;
+     endd_0 = 65689200;
+     end
      x_2 = x_2(beginn_0:endd_0);
- else
+ else % vib
+     if i_round == 4
      beginn_1 =11871200;
      endd_1 = 66343900;
+     elseif i_round ==3
+     beginn_1 = 2518970;
+     endd_1 = 50035700;
+     end
      x_2 = x_2(beginn_1:endd_1);
  end
  %plot(abs(x_2));
@@ -228,15 +238,17 @@ figure(3);
 scatter(x_2,y_2,'red');
 %%
 %没有减去对照组
-cc = origin_complex_pha_not_vib;
-cc = cc(1:end,60);
+indeex = [30,60,90,120];
+for i = indeex
+cc = origin_complex_pha_vib;
+cc = cc(1:end,i);
 a = compute_phase(cc);
-a = interppp(a,index_final_vib,2);
-a(find(a<2.5))=a(find(a<2.5))+2*pi;
+% a = interppp(a,index_final_vib,2);
+% a(find(a<2.5))=a(find(a<2.5))+2*pi;
 % index = [1:200];
 % a = pha(index,15);
 a = a - mean(a);
-a = a(1:9000);
+a = a(1:240);
 
 %a = filter(BPF,a);
 %a = movmean(a,3);
@@ -245,12 +257,11 @@ a = a(1:9000);
 N = length(a);
 x = fft(a);
 m = abs(x)/N*2;
-f = (0:N-1)*167*51/N;
-figure(2);
+f = (0:N-1)*167/N;
+figure(i/30);
 plot(f(1:floor(end/2)),m(1:floor(end/2)));
-hold on;
 
-
+end
 
 
 

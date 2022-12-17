@@ -13,12 +13,16 @@ function [res,tt,index] = extract_phase(data,data_complex,data_mean,round_num,ii
 %  save(filn,"h_i");
 temp = zeros(150,n_high);
 index = [];
+ooo = zeros(150,1);
 for i = 1:n_high
     temm = h_i{i,1};
+    ooo = ooo +data_complex(temm);
     temp(1:end,i) = data_complex(temm);
     index = [index,temm(1)+ii];
     %temp = temp + data_complex(h_i{i,1});
 end
+ooo = ooo/n_high; % ooo是表示所有high的平均值
+
 
 temp2 = zeros(150,1);
 for i = 1:n_low
@@ -26,10 +30,10 @@ for i = 1:n_low
 end
 temp2 = temp2/n_low;
 
-tt = temp-temp2;
+tt = ooo-temp2;
 res = [];
-
-for i =1:n_high
+[line,column] = size(tt);
+for i =1:column
     teee = tt(1:end,i);
     pp = compute_phase(teee);
     res = [res,pp];
