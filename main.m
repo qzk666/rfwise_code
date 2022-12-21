@@ -28,7 +28,7 @@ save template.mat template;
 %加载匹配模版
 %load template.mat; %匹配RN16
 %load template2.mat; %匹配恒定波
-fi_2 = fopen('F:/experiment_data/water/12_3/55hz_not_continue/3','rb'); 
+fi_2 = fopen('/media/dislab/My_Passport/experiment_data/water/test/1','rb'); 
 x_inter_2 = fread(fi_2, 'float32');
 x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
 plot(abs(x_2));
@@ -85,7 +85,7 @@ plot(zz),hold on;
 
 color_array = {'#000000' '#589453' '#512321' 'red' 'green' 'blue' '#DACDA2' '#113521' '#52312D' '#DCA561'};
 num_valid = 0;
-round_index = 4;
+round_index = 1;
 load template.mat;
 pha = [];
 origin_complex_pha_vib = [];
@@ -93,11 +93,12 @@ origin_complex_pha_not_vib = [];
  for i_round = round_index
      index_final_not_vib = [];
      index_final_vib = [];
-      filename = ['F:/experiment_data/water/12_3/55hz_not_continue/' num2str(i_round)];
+      filename = ['/media/dislab/My_Passport/experiment_data/water/test/' num2str(i_round)];
  %filename = 'F:/experiment_data/water_30cm/4/source';
         fi_2 = fopen(filename,'rb'); 
         x_inter_2 = fread(fi_2, 'float32');
         x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
+        time =length(x_2)/25e6;
         x_const = x_2;
  for flag = 0:1%1:vib,0:not vib
  %filename = ['/Volumes/My_Passport/experiment_data/water_50cm/' num2str(i_round) '/source' ];
@@ -105,7 +106,7 @@ origin_complex_pha_not_vib = [];
 % filename = 'F:/experiment_data/water/11_26/no_vib/10';
  x_2 = x_const;
  if flag ==0 %no vib
-     if i_round == 4
+     if i_round == 1
      beginn_0 =978623;
      endd_0 = 6705220;
      elseif i_round == 3
@@ -114,9 +115,9 @@ origin_complex_pha_not_vib = [];
      end
      x_2 = x_2(beginn_0:endd_0);
  else % vib
-     if i_round == 4
-     beginn_1 =11871200;
-     endd_1 = 66343900;
+     if i_round == 1
+     beginn_1 =0.5e7;
+     endd_1 = 5.5e7;
      elseif i_round ==3
      beginn_1 = 2518970;
      endd_1 = 50035700;
@@ -238,30 +239,35 @@ figure(3);
 scatter(x_2,y_2,'red');
 %%
 %没有减去对照组
-indeex = [30,60,90,120];
-for i = indeex
+%indeex = [30,60,90,120];
+i = 30;
 cc = origin_complex_pha_vib;
 cc = cc(1:end,i);
-a = compute_phase(cc);
-% a = interppp(a,index_final_vib,2);
+a = cc;
+%a = interppp(a,index_final_vib,2);
 % a(find(a<2.5))=a(find(a<2.5))+2*pi;
 % index = [1:200];
 % a = pha(index,15);
 a = a - mean(a);
-a = a(1:240);
+
 
 %a = filter(BPF,a);
 %a = movmean(a,3);
 %plot(abs(fft(a)));
-
+  filename = ['/media/dislab/My_Passport/experiment_data/water/test/1'];
+ %filename = 'F:/experiment_data/water_30cm/4/source';
+        fi_2 = fopen(filename,'rb'); 
+        x_inter_2 = fread(fi_2, 'float32');
+        x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
+a = x_2;
 N = length(a);
 x = fft(a);
 m = abs(x)/N*2;
-f = (0:N-1)*167/N;
-figure(i/30);
+f = (0:N-1)*25e6/N;
+plot(f(1:5000),m(1:5000));
 plot(f(1:floor(end/2)),m(1:floor(end/2)));
 
-end
+
 
 
 

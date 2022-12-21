@@ -1,6 +1,6 @@
 function [epc_arr,count] = find_epc(data,data_complex,template) 
 
- I = find(data<0.015);
+ I = find(data<0.02);
 
  sort(I);
 
