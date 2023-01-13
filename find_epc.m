@@ -24,6 +24,12 @@ function [epc_arr,count] = find_epc(data,data_complex,template)
         
          epc_right = I(i);
          epc_left = I(i-1);
+
+         temp_epc = data(epc_left+100,epc_right-100);
+         
+
+
+
          temp_left = epc_left + 400;
          temp_right = temp_left + 1500;
          rrrrr = find_match(data(temp_left:temp_right),abs(template));

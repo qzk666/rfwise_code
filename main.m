@@ -8,6 +8,7 @@ close all
 fi_2 = fopen('/Volumes/My_Passport/experiment_data/water/12_25/200hz/4','rb');
 x_inter_2 = fread(fi_2, 'float32');
 x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
+
 %x_2 = x_2(2.6e7:3.4e7);
 %plot(abs(x_2));
 N = length(x_2);
