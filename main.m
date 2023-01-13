@@ -5,16 +5,16 @@ close all
 %加载匹配模版
 %load template.mat; %匹配RN16
 %load template2.mat; %匹配恒定波
-fi_2 = fopen('F:/experiment_data/water/11_26/no_vib/12','rb'); 
+fi_2 = fopen('/Volumes/My_Passport/experiment_data/water/12_25/200hz/4','rb');
 x_inter_2 = fread(fi_2, 'float32');
 x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
-x_2 = x_2(2.6e7:3.4e7);
+%x_2 = x_2(2.6e7:3.4e7);
 %plot(abs(x_2));
 N = length(x_2);
 x = fft(x_2);
 m = abs(x);
 f = (0:N-1)*25e6/N;
-plot(f(1:1000),m(1:1000));
+plot(f(1:2000),m(1:2000));
 %x_2 = x_2(2.006e7:2.0065e7);
 figure(1)
 %plot(abs(x_2(1.5e7:2e7)));
@@ -48,8 +48,8 @@ inn = 91;
 plot(index_final_vib(inn):index_final_vib(inn)+149,abs(x(index_final_vib(inn):index_final_vib(inn)+149)));
 % beginn = 18568700;
 % endd = 18577500;
-beginn = 3464000;
-endd = 3476000;
+beginn = 3.317e7;
+endd = 3.322e7;
 x = x(beginn:endd);
 %x = x - mean(x);
 %x = filter(HPF,x);

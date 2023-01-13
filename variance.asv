@@ -1,0 +1,4 @@
+function res = variance(data)
+n = 10;
+
+end
