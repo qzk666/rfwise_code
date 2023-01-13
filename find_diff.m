@@ -6,5 +6,3 @@ ampDiff = data(1:length(data)-1) - data(2:length(data));
 end
 
 
-a = [0 1 2 3 1 2 89 90 100 2 3 4];
-[val,tempIndex] = findpeaks(abs(a),'MinPeakHeight',max(a)/2);

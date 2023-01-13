@@ -5,7 +5,7 @@ close all
 %加载匹配模版
 %load template.mat; %匹配RN16
 %load template2.mat; %匹配恒定波
-fi_2 = fopen('/Volumes/My_Passport/experiment_data/water/12_25/200hz/4','rb');
+fi_2 = fopen('F:/experiment_data/water/12_25/200hz/4','rb');
 x_inter_2 = fread(fi_2, 'float32');
 x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
 
@@ -91,39 +91,39 @@ load template.mat;
 pha = [];
 origin_complex_pha_vib = [];
 origin_complex_pha_not_vib = [];
- for i_round = round_index
+ i_round = round_index
      index_final_not_vib = [];
      index_final_vib = [];
-      filename = ['F:/experiment_data/water/12_3/55hz_not_continue/' num2str(i_round)];
+      filename = ['F:/experiment_data/water/12_25/200hz/', num2str(i_round)];
  %filename = 'F:/experiment_data/water_30cm/4/source';
         fi_2 = fopen(filename,'rb'); 
         x_inter_2 = fread(fi_2, 'float32');
         x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
         x_const = x_2;
- for flag = 0:1%1:vib,0:not vib
+ %for flag = 0:1%1:vib,0:not vib
  %filename = ['/Volumes/My_Passport/experiment_data/water_50cm/' num2str(i_round) '/source' ];
  %filename = ['F:/experiment_data/water_20cm/2022_10_22/250ml/' num2str(i_round) '/source']
 % filename = 'F:/experiment_data/water/11_26/no_vib/10';
  x_2 = x_const;
- if flag ==0 %no vib
-     if i_round == 4
-     beginn_0 =978623;
-     endd_0 = 6705220;
-     elseif i_round == 3
-     beginn_0 = 61270900;
-     endd_0 = 65689200;
-     end
-     x_2 = x_2(beginn_0:endd_0);
- else % vib
-     if i_round == 4
-     beginn_1 =11871200;
-     endd_1 = 66343900;
-     elseif i_round ==3
-     beginn_1 = 2518970;
-     endd_1 = 50035700;
-     end
-     x_2 = x_2(beginn_1:endd_1);
- end
+%  if flag ==0 %no vib
+%      if i_round == 4
+%      beginn_0 =978623;
+%      endd_0 = 6705220;
+%      elseif i_round == 3
+%      beginn_0 = 61270900;
+%      endd_0 = 65689200;
+%      end
+%      x_2 = x_2(beginn_0:endd_0);
+%  else % vib
+%      if i_round == 4
+%      beginn_1 =11871200;
+%      endd_1 = 66343900;
+%      elseif i_round ==3
+%      beginn_1 = 2518970;
+%      endd_1 = 50035700;
+%      end
+%      x_2 = x_2(beginn_1:endd_1);
+%  end
  %plot(abs(x_2));
  m = 1/50;
  p = 49/50;
@@ -132,7 +132,7 @@ origin_complex_pha_not_vib = [];
  start_index = length(x_2)*m;
 
 
- [tee,count] = find_epc(data,data_complex,template);
+ [tee,count] = find_epc(data,data_complex);
  [line,column] = size(tee);
  for co = 1:count
  data = tee{co,1};
@@ -179,7 +179,7 @@ end
 if flag == 0
     avv = mean(origin_complex_pha_not_vib);
 end
- end
+ %end
 
 
 
@@ -189,7 +189,7 @@ index_final_vib = int32(index_final_vib);
 index_final_not_vib = int32(index_final_not_vib);
 %plot_all(x_const,index_final_vib,index_final_not_vib);
 %plot(pha(1:end,7));hold on;
- end
+ %end
 %%
 plot(compute_phase(origin_complex_pha_not_vib(1:end,30)));
 %%
