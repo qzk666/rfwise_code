@@ -13,12 +13,13 @@ function [epc_arr,count] = find_epc(data,data_complex)
         
          epc_right = I(i);
          epc_left = I(i-1);
+         ttt = epc_left;
 
-         temp_epc = data(epc_left+100,epc_right-100);
+         temp_epc = data(epc_left+100:epc_right-100);
          [beginn,endd] = find_diff(temp_epc);
          
-         epc_left = epc_left+100+beginn-1;
-         epc_right = epc_left+100+endd-1;
+         epc_left = ttt+100+beginn-1;
+         epc_right = ttt+100+endd-1;
 
 
          epc_arr{count,1} = data(epc_left:epc_right);
