@@ -147,26 +147,25 @@ origin_complex_pha_not_vib = [];
  if length(data) == 0
      continue;
  end
- [highdata,lowdata,highdata_complex,lowdata_complex] = separate_0_1(data,data_complex);
+ [highdata,lowdata] = separate_0_1(data);
  if length(highdata) == length(lowdata)+1
-     highdata_complex(1) = [];
+     highdata(1) = [];
  elseif length(lowdata) == length(highdat)+1
-     lowdata_complex(1) = [];
+     lowdata()
  end
- for i = 1:length(highdata_complex)
-     tempp = highdata_complex(i);
+ for i = 1:length(highdata)
+     tempp = highdata(i);
      c1 = c1+1;
      highdataall(c1) = tempp;
  end
 
-  for i = 1:length(lowdata_complex)
-     tempp = lowdata_complex(i);
+  for i = 1:length(lowdata)
+     tempp = lowdata(i);
      c2 = c2+1;
      lowdataall(c2) = tempp;
   end
  end
   smoothphase = getphasefromdiff(highdataall,lowdataall);
-  plot(smoothphase);
 
 
  
