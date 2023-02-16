@@ -82,7 +82,7 @@ end
 plot(zz),hold on;
 % yy = ones(length(z),1);
 % scatter(z,yy,'red');hold on;
-%%
+%% main
 
 color_array = {'#000000' '#589453' '#512321' 'red' 'green' 'blue' '#DACDA2' '#113521' '#52312D' '#DCA561'};
 num_valid = 0;
@@ -137,6 +137,8 @@ origin_complex_pha_not_vib = [];
  [line,column] = size(tee);
  highdataall = {};
  c1 =0;
+
+
  lowdataall = {};
  c2 = 0;
  for co = 1:count
@@ -150,7 +152,7 @@ origin_complex_pha_not_vib = [];
  [highdata,lowdata,highdata_complex,lowdata_complex] = separate_0_1(data,data_complex);
  if length(highdata) == length(lowdata)+1
      highdata_complex(1) = [];
- elseif length(lowdata) == length(highdat)+1
+ elseif length(lowdata) == length(highdata)+1
      lowdata_complex(1) = [];
  end
  for i = 1:length(highdata_complex)
@@ -165,10 +167,10 @@ origin_complex_pha_not_vib = [];
      lowdataall(c2) = tempp;
   end
  end
-  smoothphase = getphasefromdiff(highdataall,lowdataall);
+  smoothphase = getphasefromdiff(highdataall,lowdataall);%使用了MSD
   plot(smoothphase);
 
-
+%%
  
 if flag ==1
 origin_complex_pha_vib = origin_complex_pha_vib';
