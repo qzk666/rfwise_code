@@ -139,9 +139,11 @@ origin_complex_pha_not_vib = [];
  end
 
 [rr,tt,iii] = extract_phase(data,data_complex,data_mean,round_num,ii);
-
-index_final_vib = [index_final_vib,iii];
-
+if flag == 0
+index_final_not_vib = [index_final_not_vib,iii+beginn_0];
+else
+    index_final_vib = [index_final_vib,iii+beginn_1];
+end
 %TODO:插值
 if flag == 1
 origin_complex_pha_vib = [origin_complex_pha_vib,tt];
@@ -156,6 +158,10 @@ origin_complex_pha_vib = origin_complex_pha_vib';
 else
 origin_complex_pha_not_vib = origin_complex_pha_not_vib';
 end
+%rr = rr/(rr(70));
+if flag == 0
+    avv = mean(origin_complex_pha_not_vib);
+end
  end
 
 
@@ -163,6 +169,7 @@ end
 %plot(rr,'color',color_array{1,i_round});hold on;
 num_valid = num_valid +1;
 index_final_vib = int32(index_final_vib);
+index_final_not_vib = int32(index_final_not_vib);
 %plot_all(x_const,index_final_vib,index_final_not_vib);
 %plot(pha(1:end,7));hold on;
  end

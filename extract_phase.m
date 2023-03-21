@@ -30,7 +30,7 @@ for i = 1:n_low
 end
 temp2 = temp2/n_low;
 
-tt = temp; %控制
+tt = ooo; %控制MSD
 res = [];
 [line,column] = size(tt);
 for i =1:column
