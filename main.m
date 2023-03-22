@@ -86,7 +86,7 @@ plot(zz),hold on;
 
 color_array = {'#000000' '#589453' '#512321' 'red' 'green' 'blue' '#DACDA2' '#113521' '#52312D' '#DCA561'};
 num_valid = 0;
-round_index = 1;
+round_index = 4;
 load template.mat;
 pha = [];
 origin_complex_pha_vib = [];
@@ -94,7 +94,7 @@ origin_complex_pha_not_vib = [];
  for i_round = round_index
      index_final_not_vib = [];
      index_final_vib = [];
-      filename = ['E:/data/test/source/' num2str(i_round)];
+      filename = ['E:/data/no_tag/source/' num2str(i_round)];
  %filename = 'F:/experiment_data/water_30cm/4/source';
         fi_2 = fopen(filename,'rb'); 
         x_inter_2 = fread(fi_2, 'float32');
@@ -167,7 +167,22 @@ index_final_vib = int32(index_final_vib);
 %plot(pha(1:end,7));hold on;
  end
 %%
-plot(compute_phase(origin_complex_pha_not_vib(1:end,30)));
+filename = "E:/data/no_tag/trans/1";
+fi_2 = fopen(filename,'rb'); 
+x_inter_2 = fread(fi_2, 'float32');
+x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
+plot(abs(x_2));
+
+CSI = fft(origin_complex_pha_vib(1,:))./fft(trans_signal_complex');
+CSI = abs(CSI);
+
+CSI2 = fft(origin_complex_pha_vib(5,:))./fft(trans_signal_complex');
+CSI2 = abs(CSI2);
+
+CSI_ALL = zeros(500,150);
+for i = 1:count
+    CSI_ALL(i,:) = abs(fft(origin_complex_pha_vib(i,:))./fft(trans_signal_complex'));
+end
 %%
 cc = origin_complex_pha_not_vib(1:end,60);
 plot_scatter(cc);
