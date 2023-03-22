@@ -89,12 +89,13 @@ num_valid = 0;
 round_index = 4;
 load template.mat;
 pha = [];
-origin_complex_pha_vib = [];
+origin_complex_pha_vib_high = [];
+origin_complex_pha_vib_low = [];
 origin_complex_pha_not_vib = [];
  for i_round = round_index
      index_final_not_vib = [];
      index_final_vib = [];
-      filename = ['E:/data/no_tag/source/' num2str(i_round)];
+      filename = ['E:/data/tag/source/' num2str(i_round)];
  %filename = 'F:/experiment_data/water_30cm/4/source';
         fi_2 = fopen(filename,'rb'); 
         x_inter_2 = fread(fi_2, 'float32');
@@ -138,24 +139,21 @@ origin_complex_pha_not_vib = [];
      continue;
  end
 
-[rr,tt,iii] = extract_phase(data,data_complex,data_mean,round_num,ii);
+[rr,tt,iii,high_ori,low_ori] = extract_phase(data,data_complex,data_mean,round_num,ii);
 
 index_final_vib = [index_final_vib,iii];
 
 %TODO:插值
-if flag == 1
-origin_complex_pha_vib = [origin_complex_pha_vib,tt];
-else
-    origin_complex_pha_not_vib = [origin_complex_pha_not_vib,tt];
-end
+origin_complex_pha_vib_high = [origin_complex_pha_vib_high,high_ori];
+
+origin_complex_pha_vib_low = [origin_complex_pha_vib_low,low_ori];
+
 rr =  rr.';
 pha = [pha;rr];
  end
-if flag ==1
-origin_complex_pha_vib = origin_complex_pha_vib';
-else
-origin_complex_pha_not_vib = origin_complex_pha_not_vib';
-end
+origin_complex_pha_vib_high = origin_complex_pha_vib_high';
+origin_complex_pha_vib_low = origin_complex_pha_vib_low';
+
  end
 
 
@@ -166,8 +164,28 @@ index_final_vib = int32(index_final_vib);
 %plot_all(x_const,index_final_vib,index_final_not_vib);
 %plot(pha(1:end,7));hold on;
  end
+ %%
+ filename = 'E:/data/tag/source/4';
+ fi_2 = fopen(filename,'rb'); 
+  x_inter_2 = fread(fi_2, 'float32');
+   x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
+   plot(abs(x_2));
+
+   csi_signal = x_2(3.2896e7:3.2896e7+149);
+   CSI = fft(csi_signal)./fft(trans_signal_complex);
+
+   feature = (fft(origin_complex_pha_vib_high,150,2)-fft(origin_complex_pha_vib_low,150,2))./(CSI');
+   feature = abs(feature);
+   for i = 1:count
+       feature(i,:) = feature(i,:)/feature(i,1);
+   end
+ %%
+ CSI_ALL = zeros(500,150);
+for i = 1:count-2
+    CSI_ALL(i,:) = abs(fft(origin_complex_pha_vib(i,:))./fft(trans_signal_complex'));
+end
 %%
-filename = "E:/data/no_tag/trans/1";
+filename = "E:/data/no_tag_1/source/2";
 fi_2 = fopen(filename,'rb'); 
 x_inter_2 = fread(fi_2, 'float32');
 x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
