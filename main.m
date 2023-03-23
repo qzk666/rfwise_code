@@ -174,7 +174,7 @@ index_final_vib = int32(index_final_vib);
    csi_signal = x_2(3.2896e7:3.2896e7+149);
    CSI = fft(csi_signal)./fft(trans_signal_complex);
 
-   feature = (fft(origin_complex_pha_vib_high,150,2)-fft(origin_complex_pha_vib_low,150,2))./(CSI');
+   feature = (fft(origin_complex_pha_vib_high,150,2)-fft(origin_complex_pha_vib_low,150,2))./(fft(csi_signal)');
    feature = abs(feature);
    for i = 1:count
        feature(i,:) = feature(i,:)/feature(i,1);
