@@ -40,7 +40,7 @@ figure(1)
 plot(abs(rrrr));
 %%
 figure(4)
-fi_2 = fopen('E:/data/test/source/1','rb'); 
+fi_2 = fopen('E:/data/tag/source/2','rb'); 
 x_inter_2 = fread(fi_2, 'float32');
 x = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
 plot(abs(x));
@@ -82,11 +82,11 @@ end
 plot(zz),hold on;
 % yy = ones(length(z),1);
 % scatter(z,yy,'red');hold on;
-%%
+%% main
 
-color_array = {'#000000' '#589453' '#512321' 'red' 'green' 'blue' '#DACDA2' '#113521' '#52312D' '#DCA561'};
 num_valid = 0;
-round_index = 4;
+round_index = 5;
+
 load template.mat;
 pha = [];
 origin_complex_pha_vib_high = [];
@@ -116,7 +116,7 @@ origin_complex_pha_not_vib = [];
  start_index = length(x_2)*m;
 
 
- [tee,count] = find_epc(data,data_complex,template);
+ [tee,count,rec_signal] = find_epc(data,data_complex,template);
  [line,column] = size(tee);
  for co = 1:count
  data = tee{co,1};
@@ -164,32 +164,28 @@ index_final_vib = int32(index_final_vib);
 %plot_all(x_const,index_final_vib,index_final_not_vib);
 %plot(pha(1:end,7));hold on;
  end
- %%
- filename = 'E:/data/tag/source/4';
- fi_2 = fopen(filename,'rb'); 
-  x_inter_2 = fread(fi_2, 'float32');
-   x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
-   plot(abs(x_2));
-
-   csi_signal = x_2(3.2896e7:3.2896e7+149);
-   CSI = fft(csi_signal)./fft(trans_signal_complex);
-
-   feature = (fft(origin_complex_pha_vib_high,150,2)-fft(origin_complex_pha_vib_low,150,2))./(fft(csi_signal)');
-   feature = abs(feature);
+ 
+  % CSI = fft(csi_signal)./fft(trans_signal_complex);
+  % rec_signal = x_2(4.3275e7:4.3275e7+149);
+   feature = (fft(origin_complex_pha_vib_high,150,2)-fft(origin_complex_pha_vib_low,150,2))./(fft(rec_signal)'); % feature extraction
+   feature = feature.*conj(feature);
    for i = 1:count
        feature(i,:) = feature(i,:)/feature(i,1);
    end
- %%
- CSI_ALL = zeros(500,150);
-for i = 1:count-2
-    CSI_ALL(i,:) = abs(fft(origin_complex_pha_vib(i,:))./fft(trans_signal_complex'));
-end
+ 
+feature_mean = mean(feature,1);
+hold on;
+index = [1:50,100:150];
+plot(feature_mean(index));
+%% save
+save("feature1.mat","feature_mean");
+plot(abs(rec_signal));
 %%
-filename = "E:/data/no_tag_1/source/2";
+filename = "E:/data/empty/source/2";
 fi_2 = fopen(filename,'rb'); 
 x_inter_2 = fread(fi_2, 'float32');
 x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
-plot(abs(x_2));
+plot(abs(x_2(1:3e7)));
 
 CSI = fft(origin_complex_pha_vib(1,:))./fft(trans_signal_complex');
 CSI = abs(CSI);

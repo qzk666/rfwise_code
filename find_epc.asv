@@ -17,12 +17,13 @@ function [epc_arr,count,rec_signal] = find_epc(data,data_complex,template)
  last_right = 0;
  offset = 150000;
  indee = [];
- rec_signal = zeros(150,1);
  for i = 2:length(I)
      if I(i) - I(i-1) > limit
          indee = [indee,I(i)/150000];
          count = count +1;
-         rec_signal = rec_signal + data_complex(I(i)-8000:I(i)-8000+149);
+         rec_signal = data_complex(I(i)-8000);
+
+        
          epc_right = I(i);
          epc_left = I(i-1);
          temp_left = epc_left + 400;
@@ -45,5 +46,5 @@ function [epc_arr,count,rec_signal] = find_epc(data,data_complex,template)
          epc_arr{count,3} = epc_left;
      end
  end
- rec_signal = rec_signal/count;
 end
+
