@@ -85,7 +85,7 @@ plot(zz),hold on;
 %% main
 
 num_valid = 0;
-round_index = 5;
+round_index = 1:4;
 
 load template.mat;
 pha = [];
@@ -95,7 +95,7 @@ origin_complex_pha_not_vib = [];
  for i_round = round_index
      index_final_not_vib = [];
      index_final_vib = [];
-      filename = ['E:/data/tag/source/' num2str(i_round)];
+      filename = ['E:/data/env5/source/' num2str(i_round)];
  %filename = 'F:/experiment_data/water_30cm/4/source';
         fi_2 = fopen(filename,'rb'); 
         x_inter_2 = fread(fi_2, 'float32');
@@ -163,28 +163,39 @@ num_valid = num_valid +1;
 index_final_vib = int32(index_final_vib);
 %plot_all(x_const,index_final_vib,index_final_not_vib);
 %plot(pha(1:end,7));hold on;
- end
- 
-  % CSI = fft(csi_signal)./fft(trans_signal_complex);
-  % rec_signal = x_2(4.3275e7:4.3275e7+149);
-   feature = (fft(origin_complex_pha_vib_high,150,2)-fft(origin_complex_pha_vib_low,150,2))./(fft(rec_signal)'); % feature extraction
+feature = (fft(origin_complex_pha_vib_high,150,2)-fft(origin_complex_pha_vib_low,150,2))./(fft(rec_signal)'); % feature extraction
+%feature = (fft(origin_complex_pha_vib_high,150,2)-fft(origin_complex_pha_vib_low,150,2))./(fft(trans_signal_complex)');
+%feature = (fft(origin_complex_pha_vib_high,150,2)-fft(origin_complex_pha_vib_low,150,2));
    feature = feature.*conj(feature);
    for i = 1:count
-       feature(i,:) = feature(i,:)/feature(i,1);
+       for j = 150:-1:2
+       feature(i,j) = feature(i,j)/feature(i,10);
+       end
    end
  
 feature_mean = mean(feature,1);
 hold on;
-index = [1:50,100:150];
-plot(feature_mean(index));
+index = [10:70,80:150];
+plot(feature_mean(index),'color','g');
+
+pha = [];
+origin_complex_pha_vib_high = [];
+origin_complex_pha_vib_low = [];
+origin_complex_pha_not_vib = [];
+ end
+ 
+  % CSI = fft(csi_signal)./fft(trans_signal_complex);
+  % rec_signal = x_2(4.3275e7:4.3275e7+149);
+  
 %% save
 save("feature1.mat","feature_mean");
 plot(abs(rec_signal));
 %%
-filename = "E:/data/empty/source/2";
-fi_2 = fopen(filename,'rb'); 
+filename = "E:/data/env5/source/5";
+fi_2 = fopen(filename,'rb');  
 x_inter_2 = fread(fi_2, 'float32');
 x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
+figure(2);
 plot(abs(x_2(1:3e7)));
 
 CSI = fft(origin_complex_pha_vib(1,:))./fft(trans_signal_complex');
