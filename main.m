@@ -85,7 +85,7 @@ plot(zz),hold on;
 %% main
 
 num_valid = 0;
-round_index = 1:4;
+round_index = 1:5;
 
 load template.mat;
 pha = [];
@@ -93,9 +93,10 @@ origin_complex_pha_vib_high = [];
 origin_complex_pha_vib_low = [];
 origin_complex_pha_not_vib = [];
  for i_round = round_index
+     fprintf(num2str(i_round));
      index_final_not_vib = [];
      index_final_vib = [];
-      filename = ['E:/data/env5/source/' num2str(i_round)];
+      filename = ['/Volumes/Untitled/data/distance4/source/' num2str(i_round)];
  %filename = 'F:/experiment_data/water_30cm/4/source';
         fi_2 = fopen(filename,'rb'); 
         x_inter_2 = fread(fi_2, 'float32');
@@ -109,8 +110,8 @@ origin_complex_pha_not_vib = [];
  x_2 = x_const;
 
  %plot(abs(x_2));
- m = 1/50;
- p = 49/50;
+ m = 1/8;
+ p = 7/8;
  data = abs(x_2(length(x_2)*m:length(x_2)*p));
  data_complex = x_2(length(x_2)*m:length(x_2)*p);
  start_index = length(x_2)*m;
@@ -157,26 +158,26 @@ origin_complex_pha_vib_low = origin_complex_pha_vib_low';
  end
 
 
-
 %plot(rr,'color',color_array{1,i_round});hold on;
 num_valid = num_valid +1;
 index_final_vib = int32(index_final_vib);
 %plot_all(x_const,index_final_vib,index_final_not_vib);
 %plot(pha(1:end,7));hold on;
-feature = (fft(origin_complex_pha_vib_high,150,2)-fft(origin_complex_pha_vib_low,150,2))./(fft(rec_signal)'); % feature extraction
+%feature = (fft(origin_complex_pha_vib_high,150,2)-fft(origin_complex_pha_vib_low,150,2))./(fft(rec_signal)'); % feature extraction
 %feature = (fft(origin_complex_pha_vib_high,150,2)-fft(origin_complex_pha_vib_low,150,2))./(fft(trans_signal_complex)');
 %feature = (fft(origin_complex_pha_vib_high,150,2)-fft(origin_complex_pha_vib_low,150,2));
-   feature = feature.*conj(feature);
-   for i = 1:count
-       for j = 150:-1:2
-       feature(i,j) = feature(i,j)/feature(i,10);
-       end
-   end
- 
+%theta = unwrap(mod(angle(origin_complex_pha_vib_high-origin_complex_pha_vib_low),2*pi));
+feature = (origin_complex_pha_vib_high-origin_complex_pha_vib_low)./(origin_complex_pha_vib_low);
 feature_mean = mean(feature,1);
+for i = 150:-1:2
+    feature_mean(i) = feature_mean(i)/feature_mean(i-1);
+end
+
+%theta_mean = unwrap(mean(theta,1));
+%theta_mean = theta_mean - unwrap(mod(angle(rec_signal'),2*pi));
 hold on;
 index = [10:70,80:150];
-plot(feature_mean(index),'color','g');
+plot(angle(feature_mean(index)));
 
 pha = [];
 origin_complex_pha_vib_high = [];
@@ -283,6 +284,8 @@ f = (0:N-1)*25e6/N;
 plot(f(1:5000),m(1:5000));
 plot(f(1:floor(end/2)),m(1:floor(end/2)));
 
+
+fprintf('2');
 
 
 
