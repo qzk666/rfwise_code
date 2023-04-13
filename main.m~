@@ -93,7 +93,7 @@ origin_complex_pha_vib_high = [];
 origin_complex_pha_vib_low = [];
 origin_complex_pha_not_vib = [];
 normalized = 1;
-is_legend = 0;
+is_lengend = 1;
  for i_round = round_index
      fprintf(num2str(i_round));
      index_final_not_vib = [];
@@ -183,9 +183,8 @@ end
 hold on;
 index = [10:70,80:150];
 plot((angle(feature_mean(index))));
-if is_legend
+if is_
 legend_number{end+1} = ['曲线',num2str(i_round)];
-end
 ang = angle(origin_complex_pha_vib_high);
 pha = [];
 origin_complex_pha_vib_high = [];

@@ -40,7 +40,7 @@ figure(1)
 plot(abs(rrrr));
 %%
 figure(4)
-fi_2 = fopen('/media/dislab/2A3A5DDE3A5DA819/data/distance11/source/3','rb'); 
+fi_2 = fopen('/media/dislab/2A3A5DDE3A5DA819/data/distance10/source/1','rb'); 
 x_inter_2 = fread(fi_2, 'float32');
 x = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
 plot(abs(x));
@@ -85,26 +85,25 @@ plot(zz),hold on;
 %% main
 
 num_valid = 0;
-round_index = [1:8,10];
-legend_number = {};
+round_index = 1:20;
+
 load template.mat;
 pha = [];
 origin_complex_pha_vib_high = [];
 origin_complex_pha_vib_low = [];
 origin_complex_pha_not_vib = [];
-normalized = 1;
-is_legend = 0;
  for i_round = round_index
      fprintf(num2str(i_round));
      index_final_not_vib = [];
      index_final_vib = [];
-     filename = ['/media/dislab/2A3A5DDE3A5DA819/data/tag_1/source/' num2str(i_round)];
+     filename = ['/media/dislab/2A3A5DDE3A5DA819/data/distance10/source/' num2str(i_round)];
  %filename = 'F:/experiment_data/water_30cm/4/source';
         fi_2 = fopen(filename,'rb'); 
         x_inter_2 = fread(fi_2, 'float32');
         x_2 = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
         time =length(x_2)/25e6;
         x_const = x_2;
+ for flag = 1%1:vib,0:not vib
  %filename = ['/Volumes/My_Passport/experiment_data/water_50cm/' num2str(i_round) '/source' ];
  %filename = ['F:/experiment_data/water_20cm/2022_10_22/250ml/' num2str(i_round) '/source']
 % filename = 'F:/experiment_data/water/11_26/no_vib/10';
@@ -120,9 +119,6 @@ is_legend = 0;
 
 
  [tee,count,rec_signal] = find_epc(data,data_complex,template);
- if count == 0
-     continue;
- end
  [line,column] = size(tee);
  for co = 1:count
  data = tee{co,1};
@@ -160,6 +156,7 @@ pha = [pha;rr];
 origin_complex_pha_vib_high = origin_complex_pha_vib_high';
 origin_complex_pha_vib_low = origin_complex_pha_vib_low';
 
+ end
 
 
 %plot(rr,'color',color_array{1,i_round});hold on;
@@ -173,26 +170,22 @@ index_final_vib = int32(index_final_vib);
 %theta = unwrap(mod(angle(origin_complex_pha_vib_high-origin_complex_pha_vib_low),2*pi));
 feature = (fft(origin_complex_pha_vib_high,150,2)-fft(origin_complex_pha_vib_low,150,2))./fft(origin_complex_pha_vib_low,150,2);
 feature_mean = mean(feature,1);
-if normalized
 for i = 150:-1:2
     feature_mean(i) = feature_mean(i)/feature_mean(i-1);
 end
-end
+
 %theta_mean = unwrap(mean(theta,1));
 %theta_mean = theta_mean - unwrap(mod(angle(rec_signal'),2*pi));
 hold on;
 index = [10:70,80:150];
-plot((angle(feature_mean(index))));
-if is_legend
-legend_number{end+1} = ['曲线',num2str(i_round)];
-end
+plot(angle(feature_mean(index)));
 ang = angle(origin_complex_pha_vib_high);
 pha = [];
 origin_complex_pha_vib_high = [];
 origin_complex_pha_vib_low = [];
 origin_complex_pha_not_vib = [];
  end
- legend(legend_number);
+ 
   % CSI = fft(csi_signal)./fft(trans_signal_complex);
   % rec_signal = x_2(4.3275e7:4.3275e7+149);
   
