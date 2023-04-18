@@ -40,7 +40,7 @@ figure(1)
 plot(abs(rrrr));
 %%
 figure(4)
-fi_2 = fopen('/media/dislab/2A3A5DDE3A5DA819/data/distance11/source/3','rb'); 
+fi_2 = fopen('/Volumes/Untitled/data/tag_1/test/1','rb'); 
 x_inter_2 = fread(fi_2, 'float32');
 x = x_inter_2(1:2:end) + 1i*x_inter_2(2:2:end);
 plot(abs(x));
@@ -82,23 +82,32 @@ end
 plot(zz),hold on;
 % yy = ones(length(z),1);
 % scatter(z,yy,'red');hold on;
+%% figure
+fig1 = figure('Name','phase');
+xlabel('载波index');
+ylabel('phase');
+fig2 = figure('Name','abs');
+xlabel('载波index');
+ylabel('abs');
 %% main
-
 num_valid = 0;
-round_index = [1:8,10];
+round_index = [1:10];
 legend_number = {};
+legend_number2 = {};
 load template.mat;
 pha = [];
 origin_complex_pha_vib_high = [];
 origin_complex_pha_vib_low = [];
 origin_complex_pha_not_vib = [];
 normalized = 1;
-is_legend = 0;
+is_legend = 1;
+
  for i_round = round_index
      fprintf(num2str(i_round));
      index_final_not_vib = [];
      index_final_vib = [];
-     filename = ['/media/dislab/2A3A5DDE3A5DA819/data/tag_1/source/' num2str(i_round)];
+     %filename = ['/media/dislab/2A3A5DDE3A5DA819/data/tag_1/source/' num2str(i_round)];
+     filename = ['/Volumes/Untitled/data/tag_1/source0/' num2str(i_round)];
  %filename = 'F:/experiment_data/water_30cm/4/source';
         fi_2 = fopen(filename,'rb'); 
         x_inter_2 = fread(fi_2, 'float32');
@@ -180,19 +189,33 @@ end
 end
 %theta_mean = unwrap(mean(theta,1));
 %theta_mean = theta_mean - unwrap(mod(angle(rec_signal'),2*pi));
-hold on;
+
 index = [10:70,80:150];
+index = [1:60];
+figure(fig1);
 plot((angle(feature_mean(index))));
+hold on;
+
 if is_legend
-legend_number{end+1} = ['曲线',num2str(i_round)];
+legend_number{end+1} = ['相位信息：曲线',num2str(i_round)];
 end
+figure(fig2);
+plot((abs(feature_mean(index))));
+hold on;
+if is_legend
+legend_number2{end+1} = ['幅度信息：曲线',num2str(i_round)];
+end
+
 ang = angle(origin_complex_pha_vib_high);
 pha = [];
 origin_complex_pha_vib_high = [];
 origin_complex_pha_vib_low = [];
 origin_complex_pha_not_vib = [];
  end
+ figure(fig1);
  legend(legend_number);
+ figure(fig2);
+ legend(legend_number2);
   % CSI = fft(csi_signal)./fft(trans_signal_complex);
   % rec_signal = x_2(4.3275e7:4.3275e7+149);
   
@@ -296,6 +319,40 @@ plot(f(1:floor(end/2)),m(1:floor(end/2)));
 fprintf('2');
 
 
+n = 3;
+% 循环生成两张图并添加曲线
+for i = 1:n  % n 为循环次数
+    % 生成数据
+    x = linspace(0, 2*pi, 100);
+    y1 = sin(x + i*pi/4);  % 每次循环中的 y1 数据
+    y2 = cos(x + i*pi/4);  % 每次循环中的 y2 数据
+
+    % 创建第一张图
+    fig1 = figure('Name', ['第一张图']);  % 设置图窗口的名称属性
+    plot(x, y1, 'b-', 'LineWidth', 2);  % 画出 y1 的蓝色曲线，线宽为2
+    hold on;  % 保持当前图形，以便添加多条曲线
+    xlabel('X轴');  % 设置 x 轴标签
+    ylabel('Y轴');  % 设置 y 轴标签
+    title(['第一张图 - ' num2str(i)]);  % 设置图标题
+    grid on;  % 显示网格
+
+    % 创建第二张图
+    fig2 = figure('Name', ['第二张图 - ' num2str(i)]);  % 设置图窗口的名称属性
+    plot(x, y2, 'r--', 'LineWidth', 1.5);  % 画出 y2 的红色虚线，线宽为1.5
+    hold on;  % 保持当前图形，以便添加多条曲线
+    xlabel('X轴');  % 设置 x 轴标签
+    ylabel('Y轴');  % 设置 y 轴标签
+    title(['第二张图 - ' num2str(i)]);  % 设置图标题
+    grid on;  % 显示网格
+end
+
+% 关闭图窗口
+figure(fig1);  % 切换到第一张图
+legend('曲线1', '曲线2', '曲线3', '曲线4');  % 添加图例
+hold off;  % 取消保持当前图形
+figure(fig2);  % 切换到第二张图
+legend('曲线1', '曲线2', '曲线3', '曲线4');  % 添加图例
+hold off;  % 取消保持当前图形
 
 
 
